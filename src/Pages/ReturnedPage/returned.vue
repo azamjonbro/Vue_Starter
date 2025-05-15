@@ -149,6 +149,7 @@ export default {
                   acc[_id] = {
                     title: breadItem.breadId.title,
                     totalQuantity: 0,
+                    totalQuantity2: 0,
                     totalPrice: 0,
                     createdAt: item.order.createdAt,
                     returnedId: item._id,
@@ -157,9 +158,10 @@ export default {
                   };
                 }
 
-                acc[_id].totalQuantity += item.order.totalQuantity;
-                acc[_id].totalPrice += item.totalPrice;
-                acc[_id].price += item.price;
+                acc[_id].totalQuantity += breadItem.quantity;
+                acc[_id].totalQuantity2 += item.order.totalQuantity;
+                acc[_id].totalPrice += (item.order.pricetype === 'tan' ? breadItem.breadId?.price : item.order.pricetype === 'dokon' ? breadItem.breadId?.price2 : item.order.pricetype === 'toyxona' ? breadItem.breadId?.price3 : breadItem.price) * breadItem.quantity;
+                acc[_id].price = (item.order.pricetype === 'tan' ? breadItem.breadId?.price : item.order.pricetype === 'dokon' ? breadItem.breadId?.price2 : item.order.pricetype === 'toyxona' ? breadItem.breadId?.price3 : breadItem.price)
               });
 
               return acc;

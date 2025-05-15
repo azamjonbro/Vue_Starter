@@ -56,7 +56,7 @@
           class="card"
           @click="
             openModalPage({
-              history: orderWithDeliveries.history,
+              history: statics.orderWithDeliveries?.history,
               type: 'orderwithdelivery',
             })
           "
@@ -64,7 +64,9 @@
           <Icons :name="'dayIncr'" />
           <span class="info-item">
             <h3>Nonlar soni</h3>
-            <b>{{ formatPrice(orderWithDeliveries.totalQuantity || 0) }}</b>
+            <b>{{
+              formatPrice(statics.orderWithDeliveries?.totalQuantity || 0)
+            }}</b>
           </span>
         </div>
         <div
@@ -95,18 +97,13 @@
             <h3>Qoldiq</h3>
             <b>{{
               formatPrice(
-                orderWithDeliveries.totalQuantity -
+                statics?.orderWithDeliveries?.totalQuantity2 -
                   statics?.soldBread?.history?.reduce((a, b) => {
                     return a + b.quantity;
-                  }, 0) >
-                  0
-                  ? orderWithDeliveries.totalQuantity -
-                      statics?.soldBread?.history?.reduce((a, b) => {
-                        return a + b.quantity;
-                      }, 0)
-                  : statics?.soldBread?.history?.reduce((a, b) => {
-                      return a + b.quantity;
-                    }, 0) - orderWithDeliveries.totalQuantity || 0
+                  }, 0) > 0 ? statics?.orderWithDeliveries?.totalQuantity2 -
+                  statics?.soldBread?.history?.reduce((a, b) => {
+                    return a + b.quantity;
+                  }, 0) : 0 || 0
               )
             }}</b>
           </span>
@@ -135,7 +132,6 @@ export default {
       openModal: false,
       statics: {},
       historyItem: null,
-      orderWithDeliveries: [],
     };
   },
   methods: {
@@ -153,62 +149,17 @@ export default {
       api
         .get("/api/statics")
         .then((response) => {
+          console.log(response.data);
           this.statics = response.data;
         })
         .catch((error) => {
           console.error("Error fetching statistics:", error);
         });
     },
-    getOrderWithDeliveries() {
-      api
-        .get("/api/orderWithDeliveries")
-        .then(({ data, status }) => {
-          if (status === 200) {
-            this.orderWithDeliveries = {
-              history: Object.values(
-                data?.orderWithDeliveries.reduce((acc, item) => {
-                  item.typeOfBreadIds.forEach((breadItem) => {
-                    const _id = breadItem.breadId._id;
-
-                    if (!acc[_id]) {
-                      acc[_id] = {
-                        title: breadItem.breadId.title,
-                        totalQuantity: 0,
-                        pricetype: item.pricetype,
-                        price:
-                          item.pricetype === "tan"
-                            ? breadItem.breadId.price
-                            : item.pricetype === "dokon"
-                            ? breadItem.breadId.price2
-                            : item.pricetype === "toyxona"
-                            ? breadItem.breadId.price3
-                            : breadItem.breadId.price
-                      };
-                    }
-
-                    acc[_id].totalQuantity += breadItem.quantity;
-                  });
-
-                  return acc;
-                }, {})
-              ),
-              totalQuantity: data?.orderWithDeliveries.reduce(
-                (a, b) => a + b.totalQuantity2,
-                0
-              ),
-            };
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
   },
   mounted() {
     this.getStatics();
-    this.getOrderWithDeliveries();
   },
 };
 </script>
-<style>
-</style>
+<style></style>
