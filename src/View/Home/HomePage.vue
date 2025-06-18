@@ -32,7 +32,6 @@
 <script>
 import Sidebar from "@/components/Template/Sidebar.vue";
 import Dashboard from "@/Pages/Dashboard/dashboard.vue";
-import ErrorPage from "@/components/Template/404.vue";
 import Backery from "@/Pages/Backery/backery.vue";
 import Settings from "@/Pages/Settings/settings.vue";
 import TypeOfBreadVue from "@/Pages/typeOfBread/typeOfBread.vue";
@@ -61,7 +60,6 @@ export default {
     Dashboard,
     Managers,
     Backery,
-    ErrorPage,
     Settings,
     TypeOfBreadVue,
     DeliveryVue,
